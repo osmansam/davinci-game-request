@@ -1,6 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./App.css";
+import logoUrl from "./assets/images/logo.png";
+import { LanguageToggle } from "./components/LanguageToggle";
 import { requestGame, useGetBggGames } from "./utils/api/bgg";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -8,15 +11,15 @@ const storageKey = "davinci_request_pairs";
 
 function normalizeText(text: string) {
   return text
-    .toLowerCase()
-    .trim()
-    .replace(/ı/g, "i")
-    .replace(/i̇/g, "i")
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c");
+      .toLowerCase()
+      .trim()
+      .replace(/ı/g, "i")
+      .replace(/i̇/g, "i")
+      .replace(/ğ/g, "g")
+      .replace(/ü/g, "u")
+      .replace(/ş/g, "s")
+      .replace(/ö/g, "o")
+      .replace(/ç/g, "c");
 }
 
 function buildPairKey(email: string, gameName: string) {
@@ -44,12 +47,13 @@ function writeRequestedPair(pairKey: string) {
   const existing = readRequestedPairs();
   if (existing.includes(pairKey)) return;
   window.localStorage.setItem(
-    storageKey,
-    JSON.stringify([...existing, pairKey]),
+      storageKey,
+      JSON.stringify([...existing, pairKey]),
   );
 }
 
 function App() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [query, setQuery] = useState("");
   const [selectedGame, setSelectedGame] = useState("");
@@ -57,22 +61,15 @@ function App() {
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState<"success" | "error" | "">("");
   const [requestedPairs, setRequestedPairs] = useState<string[]>(() =>
-    readRequestedPairs(),
+      readRequestedPairs(),
   );
 
   const bggGamesRaw = useGetBggGames();
 
-  const bggNames = useMemo(() => {
-    return (bggGamesRaw || [])
-      .map((entry) => {
-        if (Array.isArray(entry)) {
-          return entry[0]?.value;
-        }
-
-        return (entry as { value?: string })?.value;
-      })
-      .filter((name): name is string => Boolean(name));
-  }, [bggGamesRaw]);
+  const bggNames = useMemo(
+      () => (bggGamesRaw || []).map((g) => g.name),
+      [bggGamesRaw],
+  );
 
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedQuery = normalizeText(query);
@@ -85,7 +82,7 @@ function App() {
     if (normalizedQuery.length < 2) return [];
 
     return bggNames.filter((name) =>
-      normalizeText(name).includes(normalizedQuery),
+        normalizeText(name).includes(normalizedQuery),
     );
   }, [bggNames, normalizedQuery]);
 
@@ -115,19 +112,19 @@ function App() {
 
       writeRequestedPair(submittedPairKey);
       setRequestedPairs((prev) =>
-        prev.includes(submittedPairKey) ? prev : [...prev, submittedPairKey],
+          prev.includes(submittedPairKey) ? prev : [...prev, submittedPairKey],
       );
       setStatusType("success");
-      setStatusMessage("Talebin alindi ve panel veritabanina kaydedildi.");
+      setStatusMessage(t("successMessage"));
 
       setQuery("");
       setSelectedGame("");
     },
     onError: (error: unknown) => {
       const errorMessage =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any)?.response?.data?.message ||
-        "Talep kaydedilemedi. Lütfen tekrar deneyin.";
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (error as any)?.response?.data?.message ||
+          t("errorMessage");
       setStatusType("error");
       setStatusMessage(errorMessage);
     },
@@ -152,19 +149,19 @@ function App() {
 
     if (!isEmailValid) {
       setStatusType("error");
-      setStatusMessage("Geçerli bir e-posta adresi girmeniz gerekiyor.");
+      setStatusMessage(t("invalidEmail"));
       return;
     }
 
     if (!gameNameForSubmit) {
       setStatusType("error");
-      setStatusMessage("Lutfen oyun adini giriniz.");
+      setStatusMessage(t("missingGame"));
       return;
     }
 
     if (alreadyRequestedByUser) {
       setStatusType("error");
-      setStatusMessage("Bu oyunu bu e-posta ile daha önce talep etmişsiniz.");
+      setStatusMessage(t("alreadyRequestedValidation"));
       return;
     }
 
@@ -175,105 +172,140 @@ function App() {
   };
 
   return (
-    <main className="request-page">
-      <div className="ambient ambient-left" aria-hidden="true" />
-      <div className="ambient ambient-right" aria-hidden="true" />
+      <main className="request-page">
+        {/* Background pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.025] pointer-events-none"
+          style={{
+            backgroundImage: `url('${logoUrl}')`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '200px auto',
+            filter: 'grayscale(1) brightness(0.5)',
+          }}
+        />
+        {/* Header Bar */}
+        <div className="request-topbar">
+          <img
+              src="/title-background.png"
+              alt=""
+              className="request-topbar-bg"
+              aria-hidden="true"
+          />
+          <div className="request-topbar-title">
+            <div className="request-topbar-logo">
+              <img src={logoUrl} alt="Davinci Logo" />
+            </div>
+            {t("title")}
+            <div className="request-topbar-lang">
+              <LanguageToggle />
+            </div>
+          </div>
+        </div>
 
-      <section className="request-shell" aria-labelledby="request-title">
-        <header className="request-header">
-          <p className="kicker">DAVINCI BOARD GAME</p>
-          <h1 id="request-title">Satılık Oyun Talep Formu</h1>
-        </header>
+        {/* Content */}
+        <div className="request-content">
+          <section className="request-shell" aria-labelledby="request-title">
+            {/* Board game illustration */}
+            <div className="request-hero">
+              <img src="/boardgame.png" alt="Board Game" />
+            </div>
 
-        <form className="request-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>E-posta adresi</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="ornek@eposta.com"
-              required
-              autoComplete="email"
-            />
-          </label>
+            <div className="request-divider" />
 
-          <div className="field autocomplete-field">
-            <label htmlFor="game-query">Talep edilen oyun</label>
-            <input
-              id="game-query"
-              type="text"
-              value={query}
-              onChange={(event) => {
-                const nextValue = event.target.value;
-                setQuery(nextValue);
-                setSelectedGame("");
-                setIsSuggestionFocused(nextValue.trim().length >= 2);
-                setStatusMessage("");
-                setStatusType("");
-              }}
-              onFocus={() => setIsSuggestionFocused(true)}
-              onBlur={() => {
-                // Allow click on suggestion before closing list.
-                setTimeout(() => setIsSuggestionFocused(false), 120);
-              }}
-              placeholder="Ornek: Blood Rage"
-              required
-            />
+            <div className="request-inner">
+              <header className="request-header">
+                <h1 id="request-title">{t("formTitle")}</h1>
+              </header>
 
-            {query.trim().length >= 2 && isSuggestionFocused && (
-              <div
-                className="suggestion-panel"
-                role="listbox"
-                aria-label="Oyun onerileri"
-              >
-                {visibleSuggestions.length === 0 && (
-                  <p className="suggestion-empty">
-                    Sonuc bulunamadi. Farkli bir isim deneyin.
-                  </p>
+              <form className="request-form" onSubmit={handleSubmit} noValidate>
+                <label className="field">
+                  <span>{t("emailLabel")}</span>
+                  <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder={t("emailPlaceholder")}
+                      required
+                      autoComplete="email"
+                  />
+                </label>
+
+                <div className="field autocomplete-field">
+                  <label htmlFor="game-query">{t("gameLabel")}</label>
+                  <input
+                      id="game-query"
+                      type="text"
+                      value={query}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setQuery(nextValue);
+                        setSelectedGame("");
+                        setIsSuggestionFocused(nextValue.trim().length >= 2);
+                        setStatusMessage("");
+                        setStatusType("");
+                      }}
+                      onFocus={() => setIsSuggestionFocused(true)}
+                      onBlur={() => {
+                        setTimeout(() => setIsSuggestionFocused(false), 120);
+                      }}
+                      placeholder={t("gamePlaceholder")}
+                      required
+                  />
+
+                  {query.trim().length >= 2 && isSuggestionFocused && (
+                      <div
+                          className="suggestion-panel"
+                          role="listbox"
+                          aria-label={t("gameLabel")}
+                      >
+                        {visibleSuggestions.length === 0 && (
+                            <p className="suggestion-empty">
+                              {t("suggestionsEmpty")}
+                            </p>
+                        )}
+
+                        {visibleSuggestions.map((suggestion) => (
+                            <button
+                                type="button"
+                                key={`${suggestion.source}-${suggestion.name}`}
+                                className="suggestion-item"
+                                onMouseDown={(event) => event.preventDefault()}
+                                onClick={() => handleSelectSuggestion(suggestion.name)}
+                            >
+                              <span className="suggestion-name">{suggestion.name}</span>
+                            </button>
+                        ))}
+                      </div>
+                  )}
+                </div>
+
+                {alreadyRequestedByUser && (
+                    <div className="status-banner error" role="alert">
+                      {t("alreadyRequestedBanner")}
+                    </div>
                 )}
 
-                {visibleSuggestions.map((suggestion) => (
-                  <button
-                    type="button"
-                    key={`${suggestion.source}-${suggestion.name}`}
-                    className="suggestion-item"
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => handleSelectSuggestion(suggestion.name)}
-                  >
-                    <span className="suggestion-name">{suggestion.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+                {statusMessage && (
+                    <div
+                        className={`status-banner ${statusType === "success" ? "success" : "error"}`}
+                        role={statusType === "success" ? "status" : "alert"}
+                    >
+                      {statusMessage}
+                    </div>
+                )}
 
-          {alreadyRequestedByUser && (
-            <div className="status-banner error" role="alert">
-              Bu e-posta ile bu oyunu daha once talep etmissiniz. Ayni kisi ayni
-              oyunu bir kez talep edebilir.
+                <button
+                    type="submit"
+                    className="submit-btn"
+                    disabled={!isFormValid || mutation.isPending}
+                >
+                  {mutation.isPending ? t("submitting") : t("submitButton")}
+                </button>
+              </form>
             </div>
-          )}
-
-          {statusMessage && (
-            <div
-              className={`status-banner ${statusType === "success" ? "success" : "error"}`}
-              role={statusType === "success" ? "status" : "alert"}
-            >
-              {statusMessage}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={!isFormValid || mutation.isPending}
-          >
-            {mutation.isPending ? "Kaydediliyor..." : "Talebi gönder"}
-          </button>
-        </form>
-      </section>
-    </main>
+          </section>
+        </div>
+      </main>
   );
 }
 

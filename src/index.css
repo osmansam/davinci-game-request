@@ -4,89 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Walking animation keyframes */
-@keyframes walking {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-@keyframes armLeft {
-  0%, 100% {
-    transform: rotate(0deg);
-    transform-origin: 12px 8px;
-  }
-  50% {
-    transform: rotate(-15deg);
-    transform-origin: 12px 8px;
-  }
-}
-
-@keyframes armRight {
-  0%, 100% {
-    transform: rotate(0deg);
-    transform-origin: 12px 8px;
-  }
-  50% {
-    transform: rotate(15deg);
-    transform-origin: 12px 8px;
-  }
-}
-
-@keyframes legLeft {
-  0%, 100% {
-    transform: rotate(0deg);
-    transform-origin: 12px 14px;
-  }
-  50% {
-    transform: rotate(15deg);
-    transform-origin: 12px 14px;
-  }
-}
-
-@keyframes legRight {
-  0%, 100% {
-    transform: rotate(0deg);
-    transform-origin: 12px 14px;
-  }
-  50% {
-    transform: rotate(-15deg);
-    transform-origin: 12px 14px;
-  }
-}
-
-@keyframes gentleBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.animate-walking {
-  animation: walking 0.6s ease-in-out infinite;
-}
-
-.animate-arm-left {
-  animation: armLeft 0.6s ease-in-out infinite;
-}
-
-.animate-arm-right {
-  animation: armRight 0.6s ease-in-out infinite;
-}
-
-.animate-leg-left {
-  animation: legLeft 0.6s ease-in-out infinite;
-}
-
-.animate-leg-right {
-  animation: legRight 0.6s ease-in-out infinite;
-}
-
-.animate-gentle-bounce {
-  animation: gentleBounce 1.5s ease-in-out infinite;
+html, body {
+  margin: 0;
+  padding: 0;
 }

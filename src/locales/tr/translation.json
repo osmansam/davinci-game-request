@@ -1,1 +1,17 @@
-{}
+{
+  "title": "Davinci Board Game",
+  "formTitle": "Oyun Talep Formu",
+  "emailLabel": "E-posta adresi",
+  "emailPlaceholder": "ornek@eposta.com",
+  "gameLabel": "Talep edilen oyun",
+  "gamePlaceholder": "Örnek: Blood Rage",
+  "submitButton": "Talebi Gönder",
+  "submitting": "Kaydediliyor...",
+  "suggestionsEmpty": "Sonuç bulunamadı. Farklı bir isim deneyin.",
+  "invalidEmail": "Geçerli bir e-posta adresi girmeniz gerekiyor.",
+  "missingGame": "Lütfen oyun adını giriniz.",
+  "alreadyRequestedValidation": "Bu oyunu bu e-posta ile daha önce talep etmişsiniz.",
+  "alreadyRequestedBanner": "Bu e-posta ile bu oyunu daha önce talep ettiniz. Aynı kişi aynı oyunu bir kez talep edebilir.",
+  "successMessage": "Talebiniz alındı ve veritabanına kaydedildi.",
+  "errorMessage": "Talep kaydedilemedi. Lütfen tekrar deneyin."
+}

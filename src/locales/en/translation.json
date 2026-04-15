@@ -1,1 +1,17 @@
-{}
+{
+  "title": "Davinci Board Game",
+  "formTitle": "Game Request Form",
+  "emailLabel": "Email address",
+  "emailPlaceholder": "example@email.com",
+  "gameLabel": "Requested game",
+  "gamePlaceholder": "Example: Blood Rage",
+  "submitButton": "Submit Request",
+  "submitting": "Saving...",
+  "suggestionsEmpty": "No results found. Try a different name.",
+  "invalidEmail": "Please enter a valid email address.",
+  "missingGame": "Please enter the game name.",
+  "alreadyRequestedValidation": "You have already requested this game with this email.",
+  "alreadyRequestedBanner": "You have already requested this game with this email. Each person can request the same game only once.",
+  "successMessage": "Your request has been received and saved to the database.",
+  "errorMessage": "Request could not be saved. Please try again."
+}
