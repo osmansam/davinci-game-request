@@ -1,6 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./App.css";
+import logoUrl from "./assets/images/logo.png";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { LanguageToggle } from "./components/LanguageToggle";
+import { WelcomeModal } from "./components/WelcomeModal";
 import { requestGame, useGetBggGames } from "./utils/api/bgg";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -50,6 +55,8 @@ function writeRequestedPair(pairKey: string) {
 }
 
 function App() {
+  const { t } = useTranslation();
+  const [showWelcome, setShowWelcome] = useState(true);
   const [email, setEmail] = useState("");
   const [query, setQuery] = useState("");
   const [selectedGame, setSelectedGame] = useState("");
@@ -62,17 +69,10 @@ function App() {
 
   const bggGamesRaw = useGetBggGames();
 
-  const bggNames = useMemo(() => {
-    return (bggGamesRaw || [])
-      .map((entry) => {
-        if (Array.isArray(entry)) {
-          return entry[0]?.value;
-        }
-
-        return (entry as { value?: string })?.value;
-      })
-      .filter((name): name is string => Boolean(name));
-  }, [bggGamesRaw]);
+  const bggNames = useMemo(
+      () => (bggGamesRaw || []).map((g) => g.name),
+      [bggGamesRaw],
+  );
 
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedQuery = normalizeText(query);
@@ -85,7 +85,7 @@ function App() {
     if (normalizedQuery.length < 2) return [];
 
     return bggNames.filter((name) =>
-      normalizeText(name).includes(normalizedQuery),
+        normalizeText(name).includes(normalizedQuery),
     );
   }, [bggNames, normalizedQuery]);
 
@@ -118,16 +118,21 @@ function App() {
         prev.includes(submittedPairKey) ? prev : [...prev, submittedPairKey],
       );
       setStatusType("success");
-      setStatusMessage("Talebin alindi ve panel veritabanina kaydedildi.");
+      setStatusMessage(t("successMessage"));
 
       setQuery("");
       setSelectedGame("");
     },
     onError: (error: unknown) => {
-      const errorMessage =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any)?.response?.data?.message ||
-        "Talep kaydedilemedi. Lütfen tekrar deneyin.";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rawMessage = (error as any)?.response?.data?.message;
+      // NestJS validation returns message as array or string
+      const messageStr = Array.isArray(rawMessage)
+        ? rawMessage.join(" ")
+        : rawMessage ?? "";
+      const errorMessage = messageStr.includes("name must be longer than or equal to 2")
+        ? t("errorNameTooShort")
+        : messageStr || t("errorMessage");
       setStatusType("error");
       setStatusMessage(errorMessage);
     },
@@ -152,19 +157,19 @@ function App() {
 
     if (!isEmailValid) {
       setStatusType("error");
-      setStatusMessage("Geçerli bir e-posta adresi girmeniz gerekiyor.");
+      setStatusMessage(t("invalidEmail"));
       return;
     }
 
     if (!gameNameForSubmit) {
       setStatusType("error");
-      setStatusMessage("Lutfen oyun adini giriniz.");
+      setStatusMessage(t("missingGame"));
       return;
     }
 
     if (alreadyRequestedByUser) {
       setStatusType("error");
-      setStatusMessage("Bu oyunu bu e-posta ile daha önce talep etmişsiniz.");
+      setStatusMessage(t("alreadyRequestedValidation"));
       return;
     }
 
@@ -175,61 +180,96 @@ function App() {
   };
 
   return (
-    <main className="request-page">
-      <div className="ambient ambient-left" aria-hidden="true" />
-      <div className="ambient ambient-right" aria-hidden="true" />
+      <main className="request-page">
+        {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
+        {/* Background pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.025] pointer-events-none"
+          style={{
+            backgroundImage: `url('${logoUrl}')`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '200px auto',
+            filter: 'grayscale(1) brightness(0.5)',
+          }}
+        />
+        {/* Header Bar */}
+        <div className="request-topbar">
+          <img
+              src="/title-background.png"
+              alt=""
+              className="request-topbar-bg"
+              aria-hidden="true"
+          />
+          <div className="request-topbar-title">
+            <div className="request-topbar-logo">
+              <img src={logoUrl} alt="Davinci Logo" />
+            </div>
+            {t("title")}
+            <div className="request-topbar-lang">
+              <LanguageToggle />
+            </div>
+          </div>
+        </div>
 
-      <section className="request-shell" aria-labelledby="request-title">
-        <header className="request-header">
-          <p className="kicker">DAVINCI BOARD GAME</p>
-          <h1 id="request-title">Satılık Oyun Talep Formu</h1>
-        </header>
+        {/* Content */}
+        <div className="request-content">
+          <section className="request-shell" aria-labelledby="request-title">
+            {/* Board game illustration */}
+            <div className="request-hero">
+              <img src="/boardgame.png" alt="Board Game" />
+            </div>
 
-        <form className="request-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>E-posta adresi</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="ornek@eposta.com"
-              required
-              autoComplete="email"
-            />
-          </label>
+            <div className="request-divider" />
 
-          <div className="field autocomplete-field">
-            <label htmlFor="game-query">Talep edilen oyun</label>
-            <input
-              id="game-query"
-              type="text"
-              value={query}
-              onChange={(event) => {
-                const nextValue = event.target.value;
-                setQuery(nextValue);
-                setSelectedGame("");
-                setIsSuggestionFocused(nextValue.trim().length >= 2);
-                setStatusMessage("");
-                setStatusType("");
-              }}
-              onFocus={() => setIsSuggestionFocused(true)}
-              onBlur={() => {
-                // Allow click on suggestion before closing list.
-                setTimeout(() => setIsSuggestionFocused(false), 120);
-              }}
-              placeholder="Ornek: Blood Rage"
-              required
-            />
+            <div className="request-inner">
+              <header className="request-header">
+                <h1 id="request-title">{t("formTitle")}</h1>
+              </header>
+
+              <form className="request-form" onSubmit={handleSubmit} noValidate>
+                <label className="field">
+                  <span>{t("emailLabel")}</span>
+                  <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder={t("emailPlaceholder")}
+                      required
+                      autoComplete="email"
+                  />
+                </label>
+
+                <div className="field autocomplete-field">
+                  <label htmlFor="game-query">{t("gameLabel")}</label>
+                  <input
+                      id="game-query"
+                      type="text"
+                      value={query}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setQuery(nextValue);
+                        setSelectedGame("");
+                        setIsSuggestionFocused(nextValue.trim().length >= 2);
+                        setStatusMessage("");
+                        setStatusType("");
+                      }}
+                      onFocus={() => setIsSuggestionFocused(true)}
+                      onBlur={() => {
+                        setTimeout(() => setIsSuggestionFocused(false), 120);
+                      }}
+                      placeholder={t("gamePlaceholder")}
+                      required
+                  />
 
             {query.trim().length >= 2 && isSuggestionFocused && (
               <div
                 className="suggestion-panel"
                 role="listbox"
-                aria-label="Oyun onerileri"
+                aria-label={t("gameLabel")}
               >
                 {visibleSuggestions.length === 0 && (
                   <p className="suggestion-empty">
-                    Sonuc bulunamadi. Farkli bir isim deneyin.
+                    {t("suggestionsEmpty")}
                   </p>
                 )}
 
@@ -248,12 +288,11 @@ function App() {
             )}
           </div>
 
-          {alreadyRequestedByUser && (
-            <div className="status-banner error" role="alert">
-              Bu e-posta ile bu oyunu daha once talep etmissiniz. Ayni kisi ayni
-              oyunu bir kez talep edebilir.
-            </div>
-          )}
+                {alreadyRequestedByUser && (
+                    <div className="status-banner error" role="alert">
+                      {t("alreadyRequestedBanner")}
+                    </div>
+                )}
 
           {statusMessage && (
             <div
@@ -264,16 +303,39 @@ function App() {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={!isFormValid || mutation.isPending}
-          >
-            {mutation.isPending ? "Kaydediliyor..." : "Talebi gönder"}
-          </button>
-        </form>
-      </section>
-    </main>
+                <button
+                    type="submit"
+                    className="submit-btn"
+                    disabled={!isFormValid || mutation.isPending}
+                >
+                  {mutation.isPending ? t("submitting") : t("submitButton")}
+                </button>
+
+                <div className="social-links">
+                  <a
+                      href="https://www.instagram.com/davinciboardgamecafe/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link"
+                      aria-label="Instagram"
+                  >
+                    <FaInstagram />
+                  </a>
+                  <a
+                      href="https://www.youtube.com/@davinciboardgamecafe"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link"
+                      aria-label="YouTube"
+                  >
+                    <FaYoutube />
+                  </a>
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
+      </main>
   );
 }
 
