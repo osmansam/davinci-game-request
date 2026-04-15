@@ -1,0 +1,185 @@
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+
+export interface Tab {
+  number: number;
+  content: ReactNode;
+  icon?: ReactNode | null;
+  label: string;
+  isDisabled: boolean;
+  onOpenAction?: () => void;
+  onCloseAction?: () => void;
+  adjustedNumber?: number;
+}
+
+export interface BreadCrumbItem {
+  title: string;
+  path: string;
+}
+
+export interface ActionType<T> {
+  name: string;
+  isModal?: boolean;
+  className?: string;
+  icon?: ReactNode;
+  isButton?: boolean;
+  buttonClassName?: string;
+  isDisabled?: boolean;
+  node?: (row: T) => ReactNode;
+  modal?: ReactNode;
+  onClick?: (row: T) => void;
+  isModalOpen?: boolean;
+  setIsModal?: (value: boolean) => void;
+  setRow?: (value: T) => void;
+  isPath?: boolean;
+  path?: string;
+}
+
+export interface FilterType {
+  node: ReactNode;
+  label?: string;
+  isUpperSide: boolean;
+  isDisabled?: boolean;
+}
+
+export interface RowKeyType<T> {
+  key: string;
+  node?: (row: T) => ReactNode;
+  isParseFloat?: boolean;
+  isOptional?: boolean;
+  isImage?: boolean;
+  className?: string;
+  options?: {
+    label: string;
+    bgColor: string; // must be css color
+    textColor: string; // must be css color
+  }[];
+}
+export interface ColumnType {
+  key: string;
+  isSortable: boolean;
+  isAddable?: boolean;
+  className?: string;
+  columnClassName?: string;
+  isActive?: boolean;
+  correspondingKey?: string;
+  node?: (columnClassName?: string) => ReactNode;
+  onClick?: () => void;
+}
+type FormElementsState = {
+  [key: string]: any; // Adjust the type as needed for your form elements
+};
+
+export interface PanelFilterType {
+  isFilterPanelActive: boolean;
+  inputs: GenericInputType[];
+  formElements: FormElementsState; // Add this to hold the current form state
+  setFormElements: Dispatch<SetStateAction<FormElementsState>>; // Add this to update the form state
+  closeFilters: () => void;
+  isApplyButtonActive?: boolean;
+  isFilterPanelCoverTable?: boolean;
+  additionalFilterCleanFunction?: () => void;
+  isCloseButtonActive?: boolean;
+}
+export interface GenericInputType {
+  type: InputTypes;
+  required: boolean;
+  additionalType?: string;
+  formKey: string;
+  options?: any[];
+  label?: string;
+  placeholder?: string;
+  folderName?: string;
+  isSelectAbove?: boolean;
+  isSelectBelow?: boolean;
+  isSelectAlwaysVisible?: boolean;
+  inputClassName?: string;
+  isMultiple?: boolean;
+  isDatePicker?: boolean;
+  suggestedOption?: { value: string; label: string }[] | null;
+  isDateInitiallyOpen?: boolean;
+  isTopFlexRow?: boolean;
+  isDisabled?: boolean;
+  gridRow?: number;
+  gridCol?: number;
+  minNumber?: number;
+  isNumberButtonsActive?: boolean;
+  isOnClearActive?: boolean;
+  isAutoFill?: boolean;
+  isMinNumber?: boolean;
+  isDebounce?: boolean;
+  isDatePickerLabel?: boolean;
+  isArrowsEnabled?: boolean;
+  triggerTabOpenOnChangeFor?: string;
+  isSortDisabled?: boolean;
+  minCharacters?: number;
+  quickOptions?: any[];
+  allOptions?: any[];
+  setIsExtraModalOpen?: Dispatch<SetStateAction<boolean>>;
+  isExtraModalOpen?: boolean;
+  extraModal?: ReactNode;
+  handleTriggerTabOptions?: (value: any) => {
+    value: any;
+    label: string;
+    imageUrl?: string;
+  }[];
+  additionalOnChange?: (value: any) => void;
+  onChangeTrigger?: (value: any) => void;
+  isReadOnly?: boolean;
+  invalidateKeys?: {
+    key: string;
+    defaultValue:
+      | string
+      | boolean
+      | number
+      | undefined
+      | Array<string>
+      | Array<number>;
+  }[];
+}
+
+export interface FormKeyType {
+  key: string;
+  type: string;
+}
+
+export const InputTypes = {
+  TEXT: "text",
+  DATE: "date",
+  NUMBER: "number",
+  SELECT: "select",
+  TEXTAREA: "textarea",
+  IMAGE: "image",
+  PASSWORD: "password",
+  TIME: "time",
+  COLOR: "color",
+  CHECKBOX: "checkbox",
+  CUSTOMINPUT: "customInput",
+  HOUR: "hour",
+  MONTHYEAR: "monthYear",
+  TAB: "tab",
+  DAILYHOURS: "dailyHours",
+  QUICKSELECT: "quickSelect",
+  AUTOCOMPLETE: "autocomplete",
+} as const;
+
+export type InputTypes = (typeof InputTypes)[keyof typeof InputTypes];
+
+export const FormKeyTypeEnum = {
+  STRING: "string",
+  NUMBER: "number",
+  COLOR: "color",
+  DATE: "date",
+  BOOLEAN: "boolean",
+  CHECKBOX: "checkbox",
+  ARRAY: "array",
+} as const;
+
+export type FormKeyTypeEnum =
+  (typeof FormKeyTypeEnum)[keyof typeof FormKeyTypeEnum];
+
+export interface NavigationType {
+  name: string;
+  path: string;
+  additionalSubmitFunction?: () => void;
+  canBeClicked: boolean;
+}

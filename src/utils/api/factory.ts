@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import type { UpdatePayload } from ".";
 import { get, patch, post, remove } from ".";
-export const Paths = {};
+export const Paths = {
+  Games: "/games",
+};
 
 interface MutationContext<T> {
   previousItems: T[];
