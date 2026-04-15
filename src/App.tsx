@@ -3,7 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./App.css";
 import logoUrl from "./assets/images/logo.png";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { LanguageToggle } from "./components/LanguageToggle";
+import { WelcomeModal } from "./components/WelcomeModal";
 import { requestGame, useGetBggGames } from "./utils/api/bgg";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -54,6 +56,7 @@ function writeRequestedPair(pairKey: string) {
 
 function App() {
   const { t } = useTranslation();
+  const [showWelcome, setShowWelcome] = useState(true);
   const [email, setEmail] = useState("");
   const [query, setQuery] = useState("");
   const [selectedGame, setSelectedGame] = useState("");
@@ -173,6 +176,7 @@ function App() {
 
   return (
       <main className="request-page">
+        {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
         {/* Background pattern */}
         <div
           className="absolute inset-0 opacity-[0.025] pointer-events-none"
@@ -301,6 +305,27 @@ function App() {
                 >
                   {mutation.isPending ? t("submitting") : t("submitButton")}
                 </button>
+
+                <div className="social-links">
+                  <a
+                      href="https://www.instagram.com/davinciboardgamecafe/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link"
+                      aria-label="Instagram"
+                  >
+                    <FaInstagram />
+                  </a>
+                  <a
+                      href="https://www.youtube.com/@davinciboardgamecafe"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link"
+                      aria-label="YouTube"
+                  >
+                    <FaYoutube />
+                  </a>
+                </div>
               </form>
             </div>
           </section>

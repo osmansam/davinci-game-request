@@ -13,5 +13,10 @@
   "alreadyRequestedValidation": "Bu oyunu bu e-posta ile daha önce talep etmişsiniz.",
   "alreadyRequestedBanner": "Bu e-posta ile bu oyunu daha önce talep ettiniz. Aynı kişi aynı oyunu bir kez talep edebilir.",
   "successMessage": "Talebiniz alındı ve veritabanına kaydedildi.",
-  "errorMessage": "Talep kaydedilemedi. Lütfen tekrar deneyin."
+  "errorMessage": "Talep kaydedilemedi. Lütfen tekrar deneyin.",
+  "welcomeModalTitle": "Hos Geldiniz!",
+  "welcomeModalBodyPart1": "Da Vinci Board Game Cafe olarak isteklerinizi önemsiyoruz. Kafemizde satılmasını istediğiniz oyunları bu form üzerinden bize iletebilirsiniz. Satılık koleksiyonumuza yeni eklenen ve eklenecek oyunları görmek için ",
+  "welcomeModalBodyLink": "Da Vinci Board Game Cafe Instagram",
+  "welcomeModalBodyPart2": " hesabımızı takip edebilirsiniz. Yeni oyunlarınızla şimdiden iyi eğlenceler 🤩",
+  "welcomeModalButton": "Tamam"
 }

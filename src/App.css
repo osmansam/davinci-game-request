@@ -104,11 +104,15 @@ body {
   display: flex;
   justify-content: center;
   background: linear-gradient(180deg, var(--dark-brown-10) 0%, transparent 100%);
+  overflow: hidden;
+  max-height: 240px;
 }
 
 .request-hero img {
   width: 100%;
-  height: auto;
+  height: 240px;
+  object-fit: cover;
+  object-position: center top;
   display: block;
 }
 
@@ -308,6 +312,141 @@ body {
   height: 1px;
   background: var(--dark-brown-20);
   margin: 0 28px;
+}
+
+/* ─── Social Links ─── */
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.social-link {
+  color: var(--dark-brown);
+  opacity: 0.45;
+  font-size: 26px;
+  line-height: 1;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.social-link:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+/* ─── Welcome Modal ─── */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(97, 66, 34, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease both;
+}
+
+.welcome-modal {
+  position: relative;
+  width: min(480px, 100%);
+  background: var(--cream-bg);
+  border: 1.5px solid var(--dark-brown-20);
+  border-radius: 20px;
+  box-shadow: 0 24px 56px rgba(97, 66, 34, 0.25);
+  padding: 36px 28px 28px;
+  animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.welcome-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--dark-brown-10);
+  border-radius: 50%;
+  color: var(--dark-brown);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.welcome-close:hover {
+  background: var(--dark-brown-20);
+}
+
+.welcome-title {
+  margin: 0 0 14px;
+  font-family: 'Germania One', cursive;
+  font-size: 26px;
+  color: var(--dark-brown);
+  text-align: center;
+}
+
+.welcome-body {
+  margin: 0 0 24px;
+  font-family: 'Merriweather', serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--dark-brown);
+  text-align: justify;
+}
+
+.welcome-link {
+  color: var(--dark-brown);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(97, 66, 34, 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.welcome-link:hover {
+  text-decoration-color: var(--dark-brown);
+}
+
+.welcome-ok {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  border: none;
+  font-family: 'Germania One', cursive;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--light-brown);
+  background: var(--dark-brown);
+  cursor: pointer;
+  clip-path: polygon(16px 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 16px 100%, 0% 50%);
+  transition: opacity 0.15s ease;
+}
+
+.welcome-ok:hover {
+  opacity: 0.88;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ─── Animation ─── */
