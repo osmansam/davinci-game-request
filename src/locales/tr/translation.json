@@ -1,1 +1,23 @@
-{}
+{
+  "title": "Da Vinci Board Game",
+  "formTitle": "Oyun Talep Formu",
+  "emailLabel": "E-posta adresi",
+  "emailPlaceholder": "ornek@eposta.com",
+  "gameLabel": "Talep edilen oyun",
+  "gamePlaceholder": "Örnek: Blood Rage",
+  "submitButton": "Talebi Gönder",
+  "submitting": "Kaydediliyor...",
+  "suggestionsEmpty": "Sonuç bulunamadı. Farklı bir isim deneyin.",
+  "invalidEmail": "Geçerli bir e-posta adresi girmeniz gerekiyor.",
+  "missingGame": "Lütfen oyun adını giriniz.",
+  "alreadyRequestedValidation": "Bu oyunu bu e-posta ile daha önce talep etmişsiniz.",
+  "alreadyRequestedBanner": "Bu e-posta ile bu oyunu daha önce talep ettiniz. Aynı kişi aynı oyunu bir kez talep edebilir.",
+  "successMessage": "Talebiniz alındı..",
+  "errorMessage": "Talep kaydedilemedi. Lütfen tekrar deneyin.",
+  "errorNameTooShort": "Oyun adı en az 2 karakter olmalıdır.",
+  "welcomeModalTitle": "Hos Geldiniz!",
+  "welcomeModalBodyPart1": "Da Vinci Board Game Cafe olarak isteklerinizi önemsiyoruz. Kafemizde satılmasını istediğiniz oyunları bu form üzerinden bize iletebilirsiniz. Satılık koleksiyonumuza yeni eklenen ve eklenecek oyunları görmek için ",
+  "welcomeModalBodyLink": "Da Vinci Board Game Cafe Instagram",
+  "welcomeModalBodyPart2": " hesabımızı takip edebilirsiniz. Yeni oyunlarınızla şimdiden iyi eğlenceler 🤩",
+  "welcomeModalButton": "Tamam"
+}

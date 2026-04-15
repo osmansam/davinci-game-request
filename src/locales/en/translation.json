@@ -1,1 +1,23 @@
-{}
+{
+  "title": "Da Vinci Board Game",
+  "formTitle": "Game Request Form",
+  "emailLabel": "Email address",
+  "emailPlaceholder": "example@email.com",
+  "gameLabel": "Requested game",
+  "gamePlaceholder": "Example: Blood Rage",
+  "submitButton": "Submit Request",
+  "submitting": "Saving...",
+  "suggestionsEmpty": "No results found. Try a different name.",
+  "invalidEmail": "Please enter a valid email address.",
+  "missingGame": "Please enter the game name.",
+  "alreadyRequestedValidation": "You have already requested this game with this email.",
+  "alreadyRequestedBanner": "You have already requested this game with this email. Each person can request the same game only once.",
+  "successMessage": "Your request has been received.",
+  "errorMessage": "Request could not be saved. Please try again.",
+  "errorNameTooShort": "Game name must be at least 2 characters.",
+  "welcomeModalTitle": "Welcome!",
+  "welcomeModalBodyPart1": "At Da Vinci Board Game, your requests matter. Use this form to tell us which games you'd like to see available in our shop. To stay updated on new additions to our collection, follow ",
+  "welcomeModalBodyLink": "Da Vinci Board Game Cafe on Instagram",
+  "welcomeModalBodyPart2": ". Have fun with your new games! 🤩",
+  "welcomeModalButton": "Got it"
+}
