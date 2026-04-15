@@ -26,7 +26,7 @@ function normalizeText(text: string) {
 
 function buildPairKey(email: string, gameName: string) {
   return `${normalizeText(email)}::${normalizeText(gameName)}`;
-}
+}//deneme
 
 function readRequestedPairs() {
   if (typeof window === "undefined") return [] as string[];
