@@ -124,10 +124,15 @@ function App() {
       setSelectedGame("");
     },
     onError: (error: unknown) => {
-      const errorMessage =
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (error as any)?.response?.data?.message ||
-          t("errorMessage");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rawMessage = (error as any)?.response?.data?.message;
+      // NestJS validation returns message as array or string
+      const messageStr = Array.isArray(rawMessage)
+        ? rawMessage.join(" ")
+        : rawMessage ?? "";
+      const errorMessage = messageStr.includes("name must be longer than or equal to 2")
+        ? t("errorNameTooShort")
+        : messageStr || t("errorMessage");
       setStatusType("error");
       setStatusMessage(errorMessage);
     },

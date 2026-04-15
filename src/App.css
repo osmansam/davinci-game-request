@@ -252,6 +252,7 @@ body {
   line-height: 1.5;
   border: 1.5px solid;
   font-family: 'Merriweather', serif;
+  text-align: center;
 }
 
 .status-banner.success {
